@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const ModalComponent = ({ show, handleClose, modalHeader, children }) => {
+const ModalComponent = ({ show, handleClose, handleSubmit, modalHeader, children}) => {
     
     if (!show) return null;
 
@@ -18,6 +18,11 @@ const ModalComponent = ({ show, handleClose, modalHeader, children }) => {
                     </div>
                     <div className='modal-body'>
                         {children}
+                    </div>
+                    <div className='modal-footer'>
+                        <button type='button' className='btn btn-success' onClick={handleSubmit}>
+                            Create
+                        </button>
                     </div>
                 </div>
             </div>

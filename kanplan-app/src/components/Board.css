@@ -1,0 +1,12 @@
+.custom-heading {
+    text-align: auto;
+}
+
+.custom-button {
+    float: right;
+}
+
+.status-column {
+    vertical-align: top;
+    padding: 10px;
+}
