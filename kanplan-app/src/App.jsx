@@ -46,16 +46,10 @@ function App() {
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
   }
 
-  const handleAddTaskToBoard = (task, boardName) => {
-    const updatedBoards = boards.map((board) => {
-      if (board.boardName === boardName) {
-        return {
-          ...board,
-          tasks: [...board.tasks, task]
-        };
-      }
-      return board;
-    });
+  const updateBoardsList = (updatedBoard) => {
+    const updatedBoards = boards.map((board) =>
+      board.boardName === updatedBoard.boardName ? updatedBoard : board
+    );
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
   };
@@ -74,9 +68,9 @@ function App() {
       <CreateBoardForm  show={showModal} handleCloseModal={handleCloseModal} handleCreateBoard={handleCreateBoard}/>
       <div>
         {selectedBoard ? (
-          <Board selectedBoard={selectedBoard} deleteBoard={handleDeleteBoard} addTaskToBoard={handleAddTaskToBoard}/>
+          <Board selectedBoard={selectedBoard} deleteBoard={handleDeleteBoard} updateBoardsList={updateBoardsList}/>
         ) : (
-          <h3 className="mb-3 mt-2">Select board or create a new board to display board</h3>
+          <h1 className=" fs-3 mb-3 mt-2">Select board or create a new board to display board</h1>
         )}
       </div>
     </>

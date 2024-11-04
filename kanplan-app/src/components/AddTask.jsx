@@ -1,14 +1,17 @@
 import React from "react";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
-    const [taskTitle, setTaskTitle] = useState("");
+    const [title, setTaskTitle] = useState("");
     const [description, setDescription] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const generateId = uuidv4().slice(0,8).toString();
         const newTask = {
-            title: taskTitle,
+            id: generateId,
+            title: title,
             description: description,
             status: board.statusFields[0].name,
         };
@@ -36,9 +39,9 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                     <div className="modal-body">
                         <form id="addTaskForm">
                             <div className='form-row mb-3'>
-                                <label htmlFor="taskTitle" className="me-2"> Task title: </label>
-                                <input type="text" id="taskTitle" name="taskTitle"
-                                 value={taskTitle}
+                                <label htmlFor="title" className="me-2"> Task title: </label>
+                                <input type="text" id="title" name="title"
+                                 value={title}
                                  required
                                  className="form-control"
                                  placeholder="Task title"

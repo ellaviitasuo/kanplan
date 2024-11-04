@@ -27,7 +27,7 @@ const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h2 className="modal-title">Create a board</h2>
+                        <h2 className="modal-title fw-2">Create a board</h2>
                             <button className="btn-close" onClick={handleCloseModal}></button>
                     </div>
                 <div className="modal-body">
