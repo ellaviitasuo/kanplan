@@ -39,16 +39,16 @@ function App() {
     }
   };
 
-  const handleDeleteBoard = (boardName) => {
+  const handleDeleteBoard = (boardId) => {
     setSelectBoard('');
-    const updatedBoards = boards.filter((board) => board.boardName !== boardName);
+    const updatedBoards = boards.filter((board) => board.boardId !== boardId);
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
   }
 
   const updateBoardsList = (updatedBoard) => {
     const updatedBoards = boards.map((board) =>
-      board.boardName === updatedBoard.boardName ? updatedBoard : board
+      board.boardId === updatedBoard.boardId ? updatedBoard : board
     );
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));

@@ -3,11 +3,27 @@ import { DragDropContext } from "react-beautiful-dnd";
 import './Board.css';
 import AddTask from "./AddTask";
 import BoardColumn from "./BoardColumn";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import EditBoardForm from "./EditBoard";
 
 const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
-    const [showModal, setShowModal] = useState(false);
-    const handleOpenModal = () => setShowModal(true);
-    const handleCloseModal = () => setShowModal(false);
+
+    // Adding tasks to board
+    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+    const handleOpenAddTaskModal = () => setShowAddTaskModal(true);
+    const handleCloseAddTaskModal = () => setShowAddTaskModal(false);
+    
+    // Confirming board deletion
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+    const handleOpenConfirmDeleteModal = () => setShowConfirmDeleteModal(true);
+    const handleCloseConfirmDeleteModal = () => setShowConfirmDeleteModal(false);
+
+    // Editing board
+    const [showEditBoardModal ,setShowEditBoardModal] = useState(false);
+    const handleOpenEditBoardModal = () => setShowEditBoardModal(true);
+    const handleCloseEditBoardModal = () => setShowEditBoardModal(false);
+    
+    // Show tasks on the board columns
     const [tasks, setTasks] = useState(selectedBoard.tasks);
     const [statusFields, setStatusFields] = useState([selectedBoard.statusFields]);
 
@@ -17,6 +33,21 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
             setTasks(selectedBoard.tasks);
         }
     }, [selectedBoard]);
+
+    const handleConfirmDeleteBoard = () => {
+        deleteBoard(selectedBoard.boardId);
+        setShowConfirmDeleteModal(false);
+    };
+
+    const handleEditBoard = (updatedBoardData) => {
+        const updatedBoard = {...selectedBoard,
+            boardId: updatedBoardData.boardId, 
+            boardName: updatedBoardData.boardName,
+            statusFields: updatedBoardData.statusFields,
+            tasks: updatedBoardData.tasks,
+        };
+        updateBoardsList(updatedBoard);
+    };
 
     const handleAddTasks = (task) => {
         const updatedTasks = [...tasks, task];
@@ -35,6 +66,13 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
 
     };
 
+    const deleteTask = (taskId) => {
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        const updatedBoard = {...selectedBoard, tasks: updatedTasks};
+        setTasks(updatedTasks);
+        updateBoardsList(updatedBoard);
+    }
+
     const onDragEnd = (result) => {
         const {source, destination, draggableId} = result;
         if (!destination) return;
@@ -49,25 +87,38 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         <div className="container mt-3">
             <div>
                 <button type="button"
-                className="btn btn-danger custom-button"
-                onClick={() => deleteBoard(selectedBoard.boardName)}>
+                 className="btn btn-danger custom-button"
+                 onClick={handleOpenConfirmDeleteModal}>
                     Delete {selectedBoard.boardName}
                 </button>
+                <ConfirmDeleteModal show={showConfirmDeleteModal} handleClose={handleCloseConfirmDeleteModal}
+                         itemTitle={selectedBoard.boardName} onConfirmDelete={handleConfirmDeleteBoard}/>
+                <button type="button"
+                 className="btn btn-primary custom-button me-3"
+                 onClick={handleOpenEditBoardModal}
+                 disabled
+                >
+                    Edit Board
+                </button>
+                <EditBoardForm show={showEditBoardModal} handleCloseModal={handleCloseEditBoardModal}
+                 onEditBoard={handleEditBoard} editedBoard={selectedBoard}/>
                 <button type="button" className="btn btn-primary custom-button me-3" 
-                onClick={handleOpenModal}>
+                 onClick={handleOpenAddTaskModal}>
                     Add task
                 </button>
-                <AddTask show={showModal} board={selectedBoard} handleCloseModal={handleCloseModal} onAddTask={handleAddTasks}/>
+                <AddTask show={showAddTaskModal} board={selectedBoard} 
+                 handleCloseModal={handleCloseAddTaskModal} onAddTask={handleAddTasks}/>
             </div>
             <h1 className="custom-heading me-3 mb-5 fs-1">{selectedBoard.boardName}</h1>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div className="d-flex flex-row">
+                <div style={{display: 'grid', gridAutoColumns: 'minmax(0, 1fr)', gridAutoFlow: 'column'}}>
                     { statusFields.map((statusField) => (
                         <BoardColumn 
                          statusFieldName={statusField.name}
                          tasks={tasks.filter((task) => task.status === statusField.name)}
                          droppableId={statusField.name}
                          key={statusField.name}
+                         onDeleteTask={deleteTask}
                         />
                     )) }
                 </div>

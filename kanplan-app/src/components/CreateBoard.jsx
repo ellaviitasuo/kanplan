@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import StatusFields from "./CreateBoardColumns";
 
 const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
@@ -7,7 +8,9 @@ const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const generateId = uuidv4().slice(0,8).toString();
         const newBoard = {
+            boardId: generateId,
             boardName: boardName,
             statusFields: statusFields,
             tasks: [],
@@ -41,6 +44,7 @@ const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
                         className="form-control"
                         onChange={(e) => setBoardName(e.target.value)}
                     />
+                    <h3 className="mb-3 mt-2 fw-4">Add status columns for the board</h3>
                     <StatusFields statusFields={statusFields} setStatusFields={setStatusFields}/>
                     </form>
                     </div>

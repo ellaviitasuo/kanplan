@@ -17,7 +17,6 @@ const StatusFields = ({ statusFields, setStatusFields }) => {
 
     return (
         <div>
-            <h2 className="mb-3 mt-2 fw-4" >Add status columns for the board</h2>
             {statusFields.map((field, index) => (
                 <div key={index} className='form-row mb-3'>
                     <div className="d-flex justify-content-between align-items-center">
