@@ -4,7 +4,6 @@ import './Board.css';
 import AddTask from "./AddTask";
 import BoardColumn from "./BoardColumn";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import EditBoardForm from "./EditBoard";
 
 const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
 
@@ -18,11 +17,6 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
     const handleOpenConfirmDeleteModal = () => setShowConfirmDeleteModal(true);
     const handleCloseConfirmDeleteModal = () => setShowConfirmDeleteModal(false);
 
-    // Editing board
-    const [showEditBoardModal ,setShowEditBoardModal] = useState(false);
-    const handleOpenEditBoardModal = () => setShowEditBoardModal(true);
-    const handleCloseEditBoardModal = () => setShowEditBoardModal(false);
-    
     // Show tasks on the board columns
     const [tasks, setTasks] = useState(selectedBoard.tasks);
     const [statusFields, setStatusFields] = useState([selectedBoard.statusFields]);
@@ -37,16 +31,6 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
     const handleConfirmDeleteBoard = () => {
         deleteBoard(selectedBoard.boardId);
         setShowConfirmDeleteModal(false);
-    };
-
-    const handleEditBoard = (updatedBoardData) => {
-        const updatedBoard = {...selectedBoard,
-            boardId: updatedBoardData.boardId, 
-            boardName: updatedBoardData.boardName,
-            statusFields: updatedBoardData.statusFields,
-            tasks: updatedBoardData.tasks,
-        };
-        updateBoardsList(updatedBoard);
     };
 
     const handleAddTasks = (task) => {
@@ -93,15 +77,6 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
                 </button>
                 <ConfirmDeleteModal show={showConfirmDeleteModal} handleClose={handleCloseConfirmDeleteModal}
                          itemTitle={selectedBoard.boardName} onConfirmDelete={handleConfirmDeleteBoard}/>
-                <button type="button"
-                 className="btn btn-primary custom-button me-3"
-                 onClick={handleOpenEditBoardModal}
-                 disabled
-                >
-                    Edit Board
-                </button>
-                <EditBoardForm show={showEditBoardModal} handleCloseModal={handleCloseEditBoardModal}
-                 onEditBoard={handleEditBoard} editedBoard={selectedBoard}/>
                 <button type="button" className="btn btn-primary custom-button me-3" 
                  onClick={handleOpenAddTaskModal}>
                     Add task
