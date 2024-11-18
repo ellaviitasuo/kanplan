@@ -57,7 +57,7 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         updateBoardsList(updatedBoard);
     }
 
-    const onDragEnd = (result) => {
+    const onDragEnd = async (result) => {
         const {source, destination, draggableId} = result;
         if (!destination) return;
         
@@ -65,6 +65,16 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         console.log("destination.droppableId: ", destination.droppableId);
 
         updateTaskStatus(draggableId, destination.droppableId);
+
+        try {
+            const response = await fetch('/.netlify/functions/hello');
+            const data = await response.json();
+            console.log(data.message);
+        }
+        catch (error) {
+            console.error('Error fetching the /hello endpoint: ', error);
+        }
+
     };
 
     return (
