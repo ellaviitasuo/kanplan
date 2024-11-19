@@ -8,4 +8,4 @@
   status = 200
 
 [functions]
-  directory = "kanplan-app/netlify/functions"
+  directory = "netlify/functions"
