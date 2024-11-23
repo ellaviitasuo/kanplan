@@ -3,9 +3,11 @@ import Header from './components/Header';
 import CreateBoardForm from './components/CreateBoard';
 import "bootstrap/dist/css/bootstrap.css";
 import Board from './components/Board';
+import netlifyIdentity from "netlify-identity-widget";
 
 function App() {
 
+  const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [boards, setBoards] = useState(JSON.parse(localStorage.getItem("boards")) || []);
   const [selectedBoard, setSelectBoard] = useState("");
@@ -13,6 +15,17 @@ function App() {
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
+  useEffect(() => {
+    netlifyIdentity.init();
+    netlifyIdentity.on("login", (user) => {
+      setUser(user);
+      netlifyIdentity.close();
+    });
+    netlifyIdentity.on("logout", () => {
+      setUser(null);
+    });
+  }, []);
+  
   useEffect(() => {
     const storedBoards = localStorage.getItem("boards");
       if (storedBoards) {
@@ -64,10 +77,12 @@ function App() {
 
   return (
     <>
-      <Header handleOpenModal={handleOpenModal} boards={boards} onSelectBoard={handleSelectBoard} selectedBoard={selectedBoard}/>
+      <Header handleOpenModal={handleOpenModal} boards={boards} onSelectBoard={handleSelectBoard} selectedBoard={selectedBoard} user={user}/>
       <CreateBoardForm  show={showModal} handleCloseModal={handleCloseModal} handleCreateBoard={handleCreateBoard}/>
       <div>
-        {selectedBoard ? (
+        {!user ? (
+          <h1 className=" fs-3 mb-3 mt-2">Please login to use KanPlan </h1>
+        ) : selectedBoard ? (
           <Board selectedBoard={selectedBoard} deleteBoard={handleDeleteBoard} updateBoardsList={updateBoardsList}/>
         ) : (
           <h1 className=" fs-3 mb-3 mt-2">Select board or create a new board to display board</h1>
