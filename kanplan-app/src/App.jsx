@@ -35,11 +35,25 @@ function App() {
       }
   }, []);
 
-  const handleCreateBoard = (newBoard) => {
+  const handleCreateBoard = async (newBoard) => {
     console.log(newBoard)
     const updatedBoards = [...boards, newBoard];
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
+    try {
+      const response = await fetch('/.netlify/functions/postBoard', {
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newBoard),
+      })
+       const data = await response.json();
+      console.log(data.message);
+    }
+    catch (error) {
+      console.error("Error adding board ", error)
+    }
   };
 
   const handleSelectBoard = (boardName) => {
@@ -52,19 +66,42 @@ function App() {
     }
   };
 
-  const handleDeleteBoard = (boardId) => {
+  const handleDeleteBoard = async (boardId) => {
     setSelectBoard('');
     const updatedBoards = boards.filter((board) => board.boardId !== boardId);
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
-  }
 
-  const updateBoardsList = (updatedBoard) => {
+    try {
+      const response = await fetch(`/.netlify/functions/deleteBoard?boardId=${boardId}`, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+      })
+      const data = await response.json();
+      console.log(data.message);
+    } 
+    catch (error) {
+      console.error("Error deleting board", error);
+    }
+
+  };
+
+  const updateBoardsList = async (updatedBoard) => {
     const updatedBoards = boards.map((board) =>
       board.boardId === updatedBoard.boardId ? updatedBoard : board
     );
     setBoards(updatedBoards);
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
+
+    try {
+      const response = await fetch('/.netlify/functions/getBoards')
+       const data = await response.json();
+      console.log(data.message);
+    }
+    catch (error) {
+      console.log("Error fetching boards", error);
+    }
+
   };
 
   useEffect(() => {

@@ -33,11 +33,23 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         setShowConfirmDeleteModal(false);
     };
 
-    const handleAddTasks = (task) => {
+    const handleAddTasks = async (task) => {
         const updatedTasks = [...tasks, task];
         const updatedBoard = {...selectedBoard, tasks: updatedTasks};
         setTasks(updatedTasks);
         updateBoardsList(updatedBoard);
+        try {
+            const response = await fetch(`/.netlify/functions/addTask?boardId=${updatedBoard.boardId}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(updatedBoard),
+              })
+              const data = await response.json();
+              console.log(data.message);
+        }
+        catch (error) {
+            console.error('Error adding task to board: ', error);
+        }
     };
 
     const updateTaskStatus = (taskId, newStatus) => {
