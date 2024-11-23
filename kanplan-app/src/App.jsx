@@ -78,7 +78,7 @@ function App() {
   return (
     <>
       <Header handleOpenModal={handleOpenModal} boards={boards} onSelectBoard={handleSelectBoard} selectedBoard={selectedBoard} user={user}/>
-      <CreateBoardForm  show={showModal} handleCloseModal={handleCloseModal} handleCreateBoard={handleCreateBoard}/>
+      <CreateBoardForm  show={showModal} handleCloseModal={handleCloseModal} handleCreateBoard={handleCreateBoard} user={user}/>
       <div>
         {!user ? (
           <h1 className=" fs-3 mb-3 mt-2">Please login to use KanPlan </h1>

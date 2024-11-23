@@ -2,7 +2,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import StatusFields from "./CreateBoardColumns";
 
-const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
+const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard, user }) => {
     const [boardName, setBoardName] = useState("");
     const [statusFields, setStatusFields] = useState([{ name:"" }]);
 
@@ -14,6 +14,7 @@ const CreateBoardForm = ({ show, handleCloseModal, handleCreateBoard }) => {
             boardName: boardName,
             statusFields: statusFields,
             tasks: [],
+            owner: user.id,
         };
         handleCreateBoard(newBoard);
         setBoardName("");
