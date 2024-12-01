@@ -110,6 +110,21 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
         updateTaskStatus(draggableId, destination.droppableId);
     };
 
+    const exportBoard = (board) => {
+        const headers = ["id", "title", "description", "status"];
+        const rows = [headers.join(","), ...board.tasks.map(row => [
+            row.id, row.title, row.description, row.status].join(",")
+        )];
+        const csv = rows.join("\n");
+        const blob = new Blob([csv], {type: "text/csv"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${board.boardName}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+    
     return (
         <div className="container mt-3">
             <div>
@@ -120,6 +135,11 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
                 </button>
                 <ConfirmDeleteModal show={showConfirmDeleteModal} handleClose={handleCloseConfirmDeleteModal}
                          itemTitle={selectedBoard.boardName} onConfirmDelete={handleConfirmDeleteBoard}/>
+                <button type="button" className="btn btn-info custom-button me-3"
+                 onClick={() => exportBoard(selectedBoard)}
+                >
+                    Export to CSV
+                </button>
                 <button type="button" className="btn btn-primary custom-button me-3" 
                  onClick={handleOpenAddTaskModal}>
                     Add task
