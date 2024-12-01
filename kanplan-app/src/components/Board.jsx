@@ -5,7 +5,7 @@ import AddTask from "./AddTask";
 import BoardColumn from "./BoardColumn";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
-const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
+const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
 
     // Adding tasks to board
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
@@ -33,28 +33,71 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         setShowConfirmDeleteModal(false);
     };
 
-    const handleAddTasks = (task) => {
-        const updatedTasks = [...tasks, task];
-        const updatedBoard = {...selectedBoard, tasks: updatedTasks};
-        setTasks(updatedTasks);
-        updateBoardsList(updatedBoard);
+    const handleAddTasks = async (task) => {
+        try {
+            const response = await fetch(`/.netlify/functions/addTask?boardId=${selectedBoard.boardId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token.access_token}`
+                },
+                body: JSON.stringify(task),
+              })
+            const data = await response.json();
+            console.log(data.message);
+            const updatedTasks = [...tasks, task];
+            setTasks(updatedTasks);
+            const updatedBoard = {...selectedBoard, tasks: updatedTasks};
+            updateBoardsList(updatedBoard);
+        }
+        catch (error) {
+            console.error('Error adding task to board: ', error);
+        }
     };
 
-    const updateTaskStatus = (taskId, newStatus) => {
+    const updateTaskStatus = async (taskId, newStatus) => {
         const updatedTasks = tasks.map((task) => 
             task.id === taskId ? {...task, status: newStatus} : task
         );
         const updatedBoard = {...selectedBoard, tasks: updatedTasks};
         setTasks(updatedTasks);
-        updateBoardsList(updatedBoard);
-
+        try {
+            const response = await fetch(`/.netlify/functions/updateTaskStatus?boardId=${selectedBoard.boardId}&taskId=${taskId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token.access_token}`
+                },
+                body: JSON.stringify(newStatus),
+              })
+            const data = await response.json();
+            console.log(data.message);
+            updateBoardsList(updatedBoard);
+        }
+        catch (error) {
+            console.error('Error updating task status: ', error);
+        }
     };
 
-    const deleteTask = (taskId) => {
-        const updatedTasks = tasks.filter((task) => task.id !== taskId);
-        const updatedBoard = {...selectedBoard, tasks: updatedTasks};
-        setTasks(updatedTasks);
-        updateBoardsList(updatedBoard);
+    const deleteTask = async (taskId) => {
+        try {
+            const response = await fetch(`/.netlify/functions/deleteTask?boardId=${selectedBoard.boardId}&taskId=${taskId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token.access_token}`
+                },
+            })
+            const data = await response.json();
+            console.log(data.message);
+            const updatedTasks = tasks.filter((task) => task.id !== taskId);
+            const updatedBoard = {...selectedBoard, tasks: updatedTasks};
+            setTasks(updatedTasks);
+            updateBoardsList(updatedBoard);
+        }
+        catch (error) {
+            console.error('Error updating task status: ', error);
+        }
     }
 
     const onDragEnd = async (result) => {
@@ -65,16 +108,6 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList }) => {
         console.log("destination.droppableId: ", destination.droppableId);
 
         updateTaskStatus(draggableId, destination.droppableId);
-
-        try {
-            const response = await fetch('/.netlify/functions/hello');
-            const data = await response.json();
-            console.log(data.message);
-        }
-        catch (error) {
-            console.error('Error fetching the /hello endpoint: ', error);
-        }
-
     };
 
     return (
