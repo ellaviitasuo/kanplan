@@ -100,6 +100,33 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
         }
     }
 
+    const editTask = async(taskId, taskTitle, taskDescption) => {
+        const updatedTasks = tasks.map((task) => 
+            task.id === taskId ? {...task, title: taskTitle, description: taskDescption } : task
+        );
+        const updatedBoard = {...selectedBoard, tasks: updatedTasks};
+        setTasks(updatedTasks);
+        updateBoardsList(updatedBoard);
+        try {
+            const response = await fetch(`/.netlify/functions/editTask?boardId=${selectedBoard.boardId}&taskId=${taskId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token.access_token}`
+                },
+                body: JSON.stringify({title: taskTitle, description: taskDescption}),
+              })
+            const data = await response.json();
+            console.log(data.message);
+            updateBoardsList(updatedBoard);
+        }
+        catch (error) {
+            console.error('Error editing task: ', error);
+        }
+
+
+    };
+
     const onDragEnd = async (result) => {
         const {source, destination, draggableId} = result;
         if (!destination) return;
@@ -110,6 +137,21 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
         updateTaskStatus(draggableId, destination.droppableId);
     };
 
+    const exportBoard = (board) => {
+        const headers = ["id", "title", "description", "status"];
+        const rows = [headers.join(","), ...board.tasks.map(row => [
+            row.id, row.title, row.description, row.status].join(",")
+        )];
+        const csv = rows.join("\n");
+        const blob = new Blob([csv], {type: "text/csv"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${board.boardName}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+    
     return (
         <div className="container mt-3">
             <div>
@@ -120,6 +162,11 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
                 </button>
                 <ConfirmDeleteModal show={showConfirmDeleteModal} handleClose={handleCloseConfirmDeleteModal}
                          itemTitle={selectedBoard.boardName} onConfirmDelete={handleConfirmDeleteBoard}/>
+                <button type="button" className="btn btn-info custom-button me-3"
+                 onClick={() => exportBoard(selectedBoard)}
+                >
+                    Export to CSV
+                </button>
                 <button type="button" className="btn btn-primary custom-button me-3" 
                  onClick={handleOpenAddTaskModal}>
                     Add task
@@ -137,6 +184,7 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
                          droppableId={statusField.name}
                          key={statusField.name}
                          onDeleteTask={deleteTask}
+                         onEditTask={editTask}
                         />
                     )) }
                 </div>
