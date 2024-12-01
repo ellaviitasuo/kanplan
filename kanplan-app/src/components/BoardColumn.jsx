@@ -2,7 +2,7 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import TaskCard from "./Task";
 
-const BoardColumn = ({ statusFieldName, tasks, droppableId, onDeleteTask }) => {
+const BoardColumn = ({ statusFieldName, tasks, droppableId, onDeleteTask, onEditTask }) => {
 
     return(
         <div className="card flex-column flex-fill me-3">
@@ -13,7 +13,7 @@ const BoardColumn = ({ statusFieldName, tasks, droppableId, onDeleteTask }) => {
                 {(provided) => (        
                     <div ref={provided.innerRef} {...provided.droppableProps} className="card-body">
                         {tasks.map((task, index) => (
-                            <TaskCard key={task.id} task={task} index={index} onDelete={onDeleteTask}/>
+                            <TaskCard key={task.id} task={task} index={index} onDelete={onDeleteTask} onEdit={onEditTask}/>
                         ))}
                         {provided.placeholder}
                     </div>

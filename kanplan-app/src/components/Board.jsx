@@ -100,6 +100,33 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
         }
     }
 
+    const editTask = async(taskId, taskTitle, taskDescption) => {
+        const updatedTasks = tasks.map((task) => 
+            task.id === taskId ? {...task, title: taskTitle, description: taskDescption } : task
+        );
+        const updatedBoard = {...selectedBoard, tasks: updatedTasks};
+        setTasks(updatedTasks);
+        updateBoardsList(updatedBoard);
+        try {
+            const response = await fetch(`/.netlify/functions/editTask?boardId=${selectedBoard.boardId}&taskId=${taskId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user.token.access_token}`
+                },
+                body: JSON.stringify({title: taskTitle, description: taskDescption}),
+              })
+            const data = await response.json();
+            console.log(data.message);
+            updateBoardsList(updatedBoard);
+        }
+        catch (error) {
+            console.error('Error editing task: ', error);
+        }
+
+
+    };
+
     const onDragEnd = async (result) => {
         const {source, destination, draggableId} = result;
         if (!destination) return;
@@ -157,6 +184,7 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
                          droppableId={statusField.name}
                          key={statusField.name}
                          onDeleteTask={deleteTask}
+                         onEditTask={editTask}
                         />
                     )) }
                 </div>

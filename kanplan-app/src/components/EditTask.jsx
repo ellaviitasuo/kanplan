@@ -1,24 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
-    const [title, setTaskTitle] = useState("");
-    const [description, setDescription] = useState("");
+const EditTask = ({ show, handleCloseModal, onEditTask, taskToEdit }) => {
+    const [title, setTaskTitle] = useState(taskToEdit.title);
+    const [description, setDescription] = useState(taskToEdit.description);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const generateId = uuidv4().slice(0,8).toString();
-        const newTask = {
-            id: generateId,
-            title: title,
-            description: description,
-            status: board.statusFields[0].name,
-        };
-        console.log("New task: ", newTask);
-        onAddTask(newTask);
-        setTaskTitle("");
-        setDescription("");
+        console.log("Edit task: ", taskToEdit.id);
+        onEditTask(taskToEdit.id, title, description);
         handleCloseModal();
     }
 
@@ -32,7 +22,7 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h2 className="modal-title">Add new task to board</h2>
+                        <h2 className="modal-title">Edit task {taskToEdit.title}</h2>
                         <button className="btn-close" onClick={handleCloseModal}>
                         </button>
                     </div>
@@ -44,7 +34,7 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                                  value={title}
                                  required
                                  className="form-control"
-                                 placeholder="Task title"
+                                 placeholder={title}
                                  onChange={(e) => setTaskTitle(e.target.value)}
                                 />
                             </div>
@@ -53,7 +43,7 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                                 <textarea id="description" name="description" rows="5"
                                  value={description}
                                  className="form-control"
-                                 placeholder="Task description"
+                                 placeholder={description}
                                  onChange={(e) => setDescription(e.target.value)}               
                                 />
                             </div>
@@ -61,7 +51,7 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-success" onClick={handleSubmit}>
-                            Add
+                            Edit
                         </button>
                     </div>
                 </div>
@@ -70,4 +60,4 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
     );
 };
 
-export default AddTask;
+export default EditTask;
