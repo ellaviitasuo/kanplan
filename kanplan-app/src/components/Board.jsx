@@ -108,15 +108,6 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
         console.log("destination.droppableId: ", destination.droppableId);
 
         updateTaskStatus(draggableId, destination.droppableId);
-        /*try {
-            const response = await fetch('/.netlify/functions/hello');
-            const data = await response.json();
-            console.log(data.message);
-        }
-        catch (error) {
-            console.error('Error fetching the /hello endpoint: ', error);
-        }
-        */
     };
 
     return (

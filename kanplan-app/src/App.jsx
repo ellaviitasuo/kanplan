@@ -139,30 +139,7 @@ function App() {
     }
 
   };
-
-  const updateBoard = async (boardId) => {
-    try {
-      const user = netlifyIdentity.currentUser();
-      const response = await fetch(`/.netlify/functions/getBoard?boardId=${boardId}`, {
-        headers: {
-          "Authorization": `Bearer ${user.token.access_token}`,
-        }
-      });
-      const data = await response.json();
-      console.log(data.message);
-      console.log(data.board);
-      const updatedBoard = data.board;
-      const updatedBoards = boards.map((board) =>
-        board.boardId === updatedBoard.boardId ? updatedBoard : board
-      );
-      setBoards(updatedBoards);
-      localStorage.setItem("boards", JSON.stringify(updatedBoards));
-    }
-    catch (error) {
-      console.log("Error fetching board", error);
-    }
-  };
-
+  
   const updateBoardsList = (updatedBoard) => {
     const updatedBoards = boards.map((board) =>
       board.boardId === updatedBoard.boardId ? updatedBoard : board
