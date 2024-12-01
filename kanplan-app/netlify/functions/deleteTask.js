@@ -1,11 +1,11 @@
 const { MongoClient } = require('mongodb');
+
 if (process.env.NODE_ENV === 'development') {
     require("dotenv").config();
 }
-
 exports.handler = async (event, context) => {
     
-    const { boardId } = event.queryStringParameters;
+    const { boardId, taskId } = event.queryStringParameters;
     try {
         const user = context.clientContext.user;
         console.log("User id: ", user.sub);
@@ -15,29 +15,36 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({message: "Unauthorized"}),
             };
         }
-        console.log("Delete board by id", boardId)
+        if (!boardId || !taskId) {
+            return {
+                statusCode: 404,
+                body: JSON.stringify({message: "Missing parameters to run deleteTask"}),
+            };
+        }
+        console.log("Delete task by id", taskId);
         const client = new MongoClient(process.env.MONGODB_URI);
         const clientPromise = client.connect();
         const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
         const collection = database.collection(process.env.MONGODB_COLLECTION);
-        const query = { owner: user.sub, boardId: boardId };
-        const result = await collection.deleteOne(query);
+        const filter = {boardId: boardId, owner: user.sub};
+        const update = {$pull: { tasks: {id: taskId} } };
+        const result = await collection.updateOne(filter, update);
         await client.close();
-        if (result.deletedCount === 1) {
+        if (result.modifiedCount === 1) {
             return {
                 statusCode: 200,
-                body: JSON.stringify({message: "Deleted board"}),
+                body: JSON.stringify({message: "Deleted task"}),
             };
         } else {
             return {
                 statusCode: 404,
-                body: JSON.stringify({message: "Board was not found or user was not able to delete it."}),
+                body: JSON.stringify({message: "Task was not found or user was not able to delete it."}),
             };
         }  
     } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({error: "Failed to delete board", details: error.message}),
+            body: JSON.stringify({error: "Failed to delete task", details: error.message}),
         };
     };
 };
