@@ -154,11 +154,11 @@ function App() {
       <CreateBoardForm  show={showModal} handleCloseModal={handleCloseModal} handleCreateBoard={handleCreateBoard} user={user}/>
       <div>
         {!user ? (
-          <h1 className=" fs-3 mb-3 mt-2">Please login to use KanPlan </h1>
+          <h1 className=" fs-3 mb-3 mt-2" id="login-header">Please login to use KanPlan </h1>
         ) : selectedBoard ? (
           <Board selectedBoard={selectedBoard} deleteBoard={handleDeleteBoard} updateBoardsList={updateBoardsList} user={user}/>
         ) : (
-          <h1 className=" fs-3 mb-3 mt-2">Select board or create a new board to display board</h1>
+          <h1 className=" fs-3 mb-3 mt-2" id="primary-header" >Select board or create a new board to display board</h1>
         )}
       </div>
     </>

@@ -153,30 +153,31 @@ const Board = ({ selectedBoard, deleteBoard, updateBoardsList, user }) => {
     };
     
     return (
-        <div className="container mt-3">
+        <div className="container mt-3" id="board">
             <div>
                 <button type="button"
                  className="btn btn-danger custom-button"
+                 id="delete-board-btn"
                  onClick={handleOpenConfirmDeleteModal}>
                     Delete {selectedBoard.boardName}
                 </button>
                 <ConfirmDeleteModal show={showConfirmDeleteModal} handleClose={handleCloseConfirmDeleteModal}
                          itemTitle={selectedBoard.boardName} onConfirmDelete={handleConfirmDeleteBoard}/>
-                <button type="button" className="btn btn-info custom-button me-3"
+                <button type="button" className="btn btn-info custom-button me-3" id="export-board-btn"
                  onClick={() => exportBoard(selectedBoard)}
                 >
                     Export to CSV
                 </button>
-                <button type="button" className="btn btn-primary custom-button me-3" 
+                <button type="button" className="btn btn-primary custom-button me-3" id="add-new-task-btn" 
                  onClick={handleOpenAddTaskModal}>
                     Add task
                 </button>
                 <AddTask show={showAddTaskModal} board={selectedBoard} 
                  handleCloseModal={handleCloseAddTaskModal} onAddTask={handleAddTasks}/>
             </div>
-            <h1 className="custom-heading me-3 mb-5 fs-1">{selectedBoard.boardName}</h1>
+            <h1 className="custom-heading me-3 mb-5 fs-1" id="board-title">{selectedBoard.boardName}</h1>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div style={{display: 'grid', gridAutoColumns: 'minmax(0, 1fr)', gridAutoFlow: 'column'}}>
+                <div style={{display: 'grid', gridAutoColumns: 'minmax(0, 1fr)', gridAutoFlow: 'column'}} id="status-fields">
                     { statusFields.map((statusField) => (
                         <BoardColumn 
                          statusFieldName={statusField.name}

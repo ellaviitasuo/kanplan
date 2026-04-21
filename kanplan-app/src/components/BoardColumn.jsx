@@ -5,13 +5,13 @@ import TaskCard from "./Task";
 const BoardColumn = ({ statusFieldName, tasks, droppableId, onDeleteTask, onEditTask }) => {
 
     return(
-        <div className="card flex-column flex-fill me-3">
-            <div className="card-header">
-                <h2 className="fs-6"> {statusFieldName} </h2>
+        <div className="card flex-column flex-fill me-3" id="status-field-column">
+            <div className="card-header" id="status-field-header">
+                <h2 className="fs-6" id="status-field-title" > {statusFieldName} </h2>
             </div>
             <Droppable droppableId={droppableId}>
                 {(provided) => (        
-                    <div ref={provided.innerRef} {...provided.droppableProps} className="card-body">
+                    <div ref={provided.innerRef} {...provided.droppableProps} className="card-body" id="status-field-body">
                         {tasks.map((task, index) => (
                             <TaskCard key={task.id} task={task} index={index} onDelete={onDeleteTask} onEdit={onEditTask}/>
                         ))}
