@@ -20,17 +20,17 @@ const EditTask = ({ show, handleCloseModal, onEditTask, taskToEdit }) => {
              tabIndex="-1"
         >
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h2 className="modal-title">Edit task {taskToEdit.title}</h2>
-                        <button className="btn-close" onClick={handleCloseModal}>
+                <div className="modal-content"  id="edit-task-container">
+                    <div className="modal-header" id="edit-task-header">
+                        <h2 className="modal-title" id="edit-task-title">Edit task {taskToEdit.title}</h2>
+                        <button className="btn-close"  id="edit-task-exit-btn" onClick={handleCloseModal}>
                         </button>
                     </div>
                     <div className="modal-body">
                         <form id="addTaskForm">
                             <div className='form-row mb-3'>
                                 <label htmlFor="title" className="me-2"> Task title: </label>
-                                <input type="text" id="title" name="title"
+                                <input type="text" id="task-title" name="title"
                                  value={title}
                                  required
                                  className="form-control"
@@ -40,7 +40,7 @@ const EditTask = ({ show, handleCloseModal, onEditTask, taskToEdit }) => {
                             </div>
                             <div className='form-row mb-3'>
                                 <label htmlFor="description"> Task description: </label>
-                                <textarea id="description" name="description" rows="5"
+                                <textarea id="task-description" name="description" rows="5"
                                  value={description}
                                  className="form-control"
                                  placeholder={description}
@@ -49,8 +49,8 @@ const EditTask = ({ show, handleCloseModal, onEditTask, taskToEdit }) => {
                             </div>
                         </form>
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-success" onClick={handleSubmit}>
+                    <div className="modal-footer"  id="edit-task-container-footer">
+                        <button type="button" className="btn btn-success"  id="edit-task-edit-btn" onClick={handleSubmit}>
                             Edit
                         </button>
                     </div>

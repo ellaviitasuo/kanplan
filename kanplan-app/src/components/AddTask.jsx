@@ -30,17 +30,17 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
              tabIndex="-1"
         >
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h2 className="modal-title">Add new task to board</h2>
-                        <button className="btn-close" onClick={handleCloseModal}>
+                <div className="modal-content" id="add-task-container">
+                    <div className="modal-header" id="add-task-header">
+                        <h2 className="modal-title" id="add-task-title">Add new task to board</h2>
+                        <button className="btn-close" id="add-task-close-btn" onClick={handleCloseModal}>
                         </button>
                     </div>
                     <div className="modal-body">
                         <form id="addTaskForm">
                             <div className='form-row mb-3'>
                                 <label htmlFor="title" className="me-2"> Task title: </label>
-                                <input type="text" id="title" name="title"
+                                <input type="text" id="task-title-input" name="title"
                                  value={title}
                                  required
                                  className="form-control"
@@ -50,7 +50,7 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                             </div>
                             <div className='form-row mb-3'>
                                 <label htmlFor="description"> Task description: </label>
-                                <textarea id="description" name="description" rows="5"
+                                <textarea id="task-description" name="description" rows="5"
                                  value={description}
                                  className="form-control"
                                  placeholder="Task description"
@@ -59,8 +59,8 @@ const AddTask = ({ show, board, handleCloseModal, onAddTask }) => {
                             </div>
                         </form>
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-success" onClick={handleSubmit}>
+                    <div className="modal-footer" id="add-task-footer">
+                        <button type="button" className="btn btn-success" id="add-task-btn" onClick={handleSubmit}>
                             Add
                         </button>
                     </div>

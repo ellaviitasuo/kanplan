@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
         console.log(task);
         const client = new MongoClient(process.env.MONGODB_URI);
         const clientPromise = client.connect();
-        const database = (await clientPromise).db(process.env.MONOGODB_DATABASE);
+        const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
         const collection = database.collection(process.env.MONGODB_COLLECTION);
         const filter = {boardId: boardId, owner: user.sub};
         const update = {$push:{tasks: task}};

@@ -26,9 +26,10 @@ const Header = ({ handleOpenModal, boards, onSelectBoard, selectedBoard, user}) 
                                     <select
                                         onChange={(e) => onSelectBoard(e.target.value)}
                                         className='form-select'
+                                        id="select-board"
                                         value={selectedBoard.boardName || ''}
                                     >
-                                        <option value=""> Select board </option>
+                                        <option value="" id="select-placeholder"> Select board </option>
                                         {boards.map((board, index) => (
                                             <option key={index} value={board.boardName}>
                                                 {board.boardName}
@@ -39,7 +40,7 @@ const Header = ({ handleOpenModal, boards, onSelectBoard, selectedBoard, user}) 
                             )}
                         </div>
                         <div className="header-actions">
-                            <button className="btn btn-primary custom-button" onClick={handleOpenModal}>
+                            <button className="btn btn-primary custom-button" id="new-board-btn" onClick={handleOpenModal}>
                                 New board
                             </button>
                         </div>
@@ -48,6 +49,7 @@ const Header = ({ handleOpenModal, boards, onSelectBoard, selectedBoard, user}) 
                 <div className="header-actions">
                     <button 
                         className="btn btn-primary custom-button"
+                        id="login-functions-btn"
                         onClick={handleAuthButton}
                     >
                         {user ? "Logout" : "Login"}

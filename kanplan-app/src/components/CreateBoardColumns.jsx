@@ -18,18 +18,19 @@ const StatusFields = ({ statusFields, setStatusFields }) => {
     return (
         <div>
             {statusFields.map((field, index) => (
-                <div key={index} className='form-row mb-3'>
+                <div key={index} className='form-row mb-3' id={`statusField-container-${index}`}>
                     <div className="d-flex justify-content-between align-items-center">
                         <label className="me-2" htmlFor={`statusField-${index}`}> 
                             Column name 
                         </label>
-                        <button type='button' className='btn-close me-2 mt-2'
+                        <button type='button' className='btn-close me-2 mt-2' id={`statusField-delete-btn-${index}`}
                             onClick={() => handleRemoveField(index)}
                             disabled={statusFields.length <= 1}
                         >
                     </button>
                     </div>
                     <input className="form-control"
+                        id={`statusField-input-${index}`}
                         value={field.name}
                         placeholder={`Column ${index + 1}`}
                         onChange={e => handleFieldChange(index, e.target.value)}
@@ -38,7 +39,7 @@ const StatusFields = ({ statusFields, setStatusFields }) => {
                     />
                 </div>
             ))}
-            <button type='button' className='btn btn-primary mt-2'
+            <button type='button' className='btn btn-primary mt-2' id="add-new-column-btn"
                 onClick={handleAddField} >
                  Add new
             </button>
